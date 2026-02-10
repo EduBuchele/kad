@@ -1,5 +1,6 @@
-package com.udemy.kad
+package com.udemy.kad.lesson1.controller
 
+import com.udemy.kad.lesson1.model.Greeting
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController

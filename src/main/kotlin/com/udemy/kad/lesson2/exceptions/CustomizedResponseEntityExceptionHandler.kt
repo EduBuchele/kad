@@ -1,4 +1,4 @@
-package com.udemy.kad.exceptions
+package com.udemy.kad.lesson2.exceptions
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

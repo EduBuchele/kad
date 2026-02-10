@@ -1,4 +1,4 @@
-package com.udemy.kad.service
+package com.udemy.kad.lesson2.service
 
 import kotlin.math.sqrt
 

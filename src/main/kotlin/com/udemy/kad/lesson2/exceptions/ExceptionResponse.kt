@@ -1,6 +1,6 @@
-package com.udemy.kad.exceptions
+package com.udemy.kad.lesson2.exceptions
 
-import java.util.Date
+import java.util.*
 
 class ExceptionResponse (
     val timestamp: Date,

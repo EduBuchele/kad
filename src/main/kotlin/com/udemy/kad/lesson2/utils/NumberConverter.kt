@@ -1,4 +1,4 @@
-package com.udemy.kad.utils
+package com.udemy.kad.lesson2.utils
 
 object NumberConverter {
 

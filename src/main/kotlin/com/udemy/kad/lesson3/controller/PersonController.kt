@@ -4,6 +4,7 @@ import com.udemy.kad.lesson3.model.Person
 import com.udemy.kad.lesson3.service.PersonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,8 +15,7 @@ class PersonController {
     private lateinit var service: PersonService
     // var service: PersonService = PersonService()
 
-    @RequestMapping(
-        method = [RequestMethod.GET],
+    @GetMapping(
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun findAll(): List<Person> {
@@ -52,8 +52,9 @@ class PersonController {
         value = ["/{id}"], method = [RequestMethod.DELETE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun delete(@PathVariable(value = "id") id: Long) {
+    fun delete(@PathVariable(value = "id") id: Long) : ResponseEntity<*> {
         service.delete(id)
+        return ResponseEntity.noContent().build<Any>();
     }
 
 

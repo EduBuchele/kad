@@ -1,6 +1,9 @@
 package com.udemy.kad.lesson3.service
 
+import com.udemy.kad.lesson3.exception.NotFoundException
 import com.udemy.kad.lesson3.model.Person
+import com.udemy.kad.lesson3.repository.PersonRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.concurrent.atomic.AtomicLong
 import java.util.logging.Logger
@@ -10,44 +13,43 @@ class PersonService {
 
     private val counter: AtomicLong = AtomicLong()
 
+    @Autowired
+    private lateinit var repository: PersonRepository
+
     private val logger = Logger.getLogger(PersonService::class.java.name)
 
-    fun findAll(): List<Person> {
-        logger.info("Finding all people!")
+    fun findAll(): List<Person> = repository.findAll()
 
-        val persons: MutableList<Person> = ArrayList()
-        for (i in 0..7) {
-            val person = mockPerson(i)
-            persons.add(person)
-        }
-        return persons
+    fun findById(id: Long) : Person {
+        logger.info("Search person by ID: $id")
+        return repository.findById(id)
+            .orElseThrow{ NotFoundException("No records found this id $id")}
     }
 
-    fun findById(id: Long): Person {
-        logger.info("Finding one person!")
-
-        val person = Person()
-        person.id = counter.incrementAndGet()
-        person.firstName = "Eduardo"
-        person.lastName = "Buchele"
-        person.address = "Blumenau - Santa Catarina - Brasil"
-        person.gender = "Male"
-        return person
+    fun create(person: Person) : Person {
+        logger.info("Creating person: ${person.firstName}")
+        return repository.save(person)
     }
 
-    fun create(person: Person) = person
+    fun update(person: Person): Person {
+        logger.info("Update person with this ID: ${person.id}")
+        val entity = repository.findById(person.id)
+            .orElseThrow { NotFoundException("No records found this id ${person.id}") }
 
-    fun update(person: Person) = person
+        person.firstName.takeIf { it.isNotBlank() }?.let { entity.firstName = it }
+        person.lastName.takeIf { it.isNotBlank() }?.let { entity.lastName = it }
+        person.address.takeIf { it.isNotBlank() }?.let { entity.address = it }
+        person.gender.takeIf { it.isNotBlank() }?.let { entity.gender = it }
 
-    fun delete(id: Long) {}
+        return repository.save(entity)
+    }
 
-    private fun mockPerson(i: Int): Person {
-        val person = Person()
-        person.id = counter.incrementAndGet()
-        person.firstName = "Person Name $i"
-        person.lastName = "Last Name $i"
-        person.address = "Some Address in Brasil"
-        person.gender = "Male"
-        return person
+
+    fun delete(id: Long) {
+        logger.info("Delete person with this ID: ${id}")
+        val person = repository.findById(id)
+            .orElseThrow { NotFoundException("No records found this id $id") }
+        repository.delete(person)
+
     }
 }
